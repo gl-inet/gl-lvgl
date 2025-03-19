@@ -1,0 +1,11 @@
+--- a/lvgl/src/indev/lv_indev.c
++++ b/lvgl/src/indev/lv_indev.c
+@@ -678,7 +678,7 @@ static void indev_pointer_proc(lv_indev_
+         data->point.x = disp->hor_res - data->point.x - 1;
+         data->point.y = disp->ver_res - data->point.y - 1;
+     }
+-    if(disp->rotation == LV_DISPLAY_ROTATION_90 || disp->rotation == LV_DISPLAY_ROTATION_270) {
++    if(disp->rotation == LV_DISPLAY_ROTATION_270) {
+         int32_t tmp = data->point.y;
+         data->point.y = data->point.x;
+         data->point.x = disp->ver_res - tmp - 1;

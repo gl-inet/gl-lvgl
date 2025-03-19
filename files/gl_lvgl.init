@@ -1,0 +1,29 @@
+#!/bin/sh /etc/rc.common
+
+START=80
+USE_PROCD=1
+
+start_service() {
+    /etc/init.d/screen disable 2>/dev/null
+    /etc/init.d/screen running 2>/dev/null && /etc/init.d/screen stop
+    /etc/init.d/gl_lcd disable 2>/dev/null
+    /etc/init.d/gl_lcd running 2>/dev/null && /etc/init.d/gl_lcd stop
+
+    procd_open_instance
+    procd_set_param nice -20
+    procd_set_param command /usr/bin/gl_lvgl
+    procd_set_param respawn
+    procd_close_instance
+}
+
+boot() {
+    for i in `seq 1 5`
+    do
+        pidof screen_boot | xargs kill -10
+        sleep 1
+        pidof screen_boot | xargs kill -9
+        sleep 1
+        pidof screen_boot || break
+    done
+    start
+}

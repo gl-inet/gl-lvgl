@@ -1,0 +1,84 @@
+--- a/main.c
++++ b/main.c
+@@ -17,7 +17,9 @@ static void lv_linux_disp_init(void)
+     const char *device = getenv_default("LV_LINUX_FBDEV_DEVICE", "/dev/fb0");
+     lv_display_t * disp = lv_linux_fbdev_create();
+ 
++    lv_display_set_physical_resolution(disp, 76, 284);
+     lv_linux_fbdev_set_file(disp, device);
++    lv_display_set_rotation(disp, LV_DISPLAY_ROTATION_90);
+ }
+ #elif LV_USE_LINUX_DRM
+ static void lv_linux_disp_init(void)
+@@ -39,12 +41,22 @@ static void lv_linux_disp_init(void)
+ #error Unsupported configuration
+ #endif
+ 
++static void lv_indev_init(void)
++{
++#if LV_USE_EVDEV
++    lv_indev_t * indev = lv_evdev_create(LV_INDEV_TYPE_POINTER, "/dev/input/event0");
++    lv_evdev_set_swap_axes(indev, true);
++    lv_evdev_set_calibration(indev, 283, 0, 0, 75);
++#endif
++}
++
+ int main(void)
+ {
+     lv_init();
+ 
+     /*Linux display device init*/
+     lv_linux_disp_init();
++    lv_indev_init();
+ 
+     /*Create a Demo*/
+     lv_demo_widgets();
+--- a/lv_conf.h
++++ b/lv_conf.h
+@@ -26,7 +26,7 @@
+  *====================*/
+ 
+ /*Color depth: 1 (I1), 8 (L8), 16 (RGB565), 24 (RGB888), 32 (XRGB8888)*/
+-#define LV_COLOR_DEPTH 32
++#define LV_COLOR_DEPTH 16
+ 
+ /*=========================
+    STDLIB WRAPPER SETTINGS
+@@ -71,7 +71,7 @@
+  *====================*/
+ 
+ /*Default display refresh, input device read and animation step period.*/
+-#define LV_DEF_REFR_PERIOD  33      /*[ms]*/
++#define LV_DEF_REFR_PERIOD  16      /*[ms]*/
+ 
+ /*Default Dot Per Inch. Used to initialize default sizes such as widgets sized, style paddings.
+  *(Not so important, you can adjust it to modify default sizes and spaces)*/
+@@ -89,7 +89,7 @@
+  * - LV_OS_WINDOWS
+  * - LV_OS_MQX
+  * - LV_OS_CUSTOM */
+-#define LV_USE_OS   LV_OS_NONE
++#define LV_USE_OS   LV_OS_PTHREAD
+ 
+ #if LV_USE_OS == LV_OS_CUSTOM
+     #define LV_OS_CUSTOM_INCLUDE <stdint.h>
+@@ -994,8 +994,8 @@
+ #if LV_USE_LINUX_FBDEV
+     #define LV_LINUX_FBDEV_BSD           0
+     #define LV_LINUX_FBDEV_RENDER_MODE   LV_DISPLAY_RENDER_MODE_PARTIAL
+-    #define LV_LINUX_FBDEV_BUFFER_COUNT  0
+-    #define LV_LINUX_FBDEV_BUFFER_SIZE   60
++    #define LV_LINUX_FBDEV_BUFFER_COUNT  2
++    #define LV_LINUX_FBDEV_BUFFER_SIZE   (76 * 284)
+ #endif
+ 
+ /*Use Nuttx to open window and handle touchscreen*/
+@@ -1026,7 +1026,7 @@
+ #define LV_USE_TFT_ESPI         0
+ 
+ /*Driver for evdev input devices*/
+-#define LV_USE_EVDEV    0
++#define LV_USE_EVDEV    1
+ 
+ /*Driver for libinput input devices*/
+ #define LV_USE_LIBINPUT    0
