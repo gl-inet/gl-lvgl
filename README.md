@@ -31,11 +31,11 @@ gl-lvgl ipk is in bin/packages/aarch64_cortex-a53_neon-vfpv4/base/gl-lvgl_2025-2
 
 ## Install
 
-scp **gl-lvgl_2025-2-7-c924e24c-1_arm_cortex-a7_neon-vfpv4.ipk** to BE3600's root directory
+scp **gl-lvgl_2025-2-7-c924e24c-1_aarch64_cortex-a53_neon-vfpv4.ipk** to BE3600's root directory
 
 ```
 $ opkg update
-$ opkg install /gl-lvgl_2025-2-7-c924e24c-1_arm_cortex-a7_neon-vfpv4.ipk
+$ opkg install /gl-lvgl_2025-2-7-c924e24c-1_aarch64_cortex-a53_neon-vfpv4.ipk
 ```
 ## Some Command
 ### shell
