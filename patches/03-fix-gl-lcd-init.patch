@@ -1,12 +1,13 @@
 --- a/main.c
 +++ b/main.c
-@@ -17,7 +17,9 @@ static void lv_linux_disp_init(void)
+@@ -17,7 +17,10 @@ static void lv_linux_disp_init(void)
      const char *device = getenv_default("LV_LINUX_FBDEV_DEVICE", "/dev/fb0");
      lv_display_t * disp = lv_linux_fbdev_create();
  
 +    lv_display_set_physical_resolution(disp, 76, 284);
      lv_linux_fbdev_set_file(disp, device);
 +    lv_display_set_rotation(disp, LV_DISPLAY_ROTATION_90);
++    lv_linux_fbdev_set_display(disp);
  }
  #elif LV_USE_LINUX_DRM
  static void lv_linux_disp_init(void)

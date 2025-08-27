@@ -6,8 +6,8 @@ USE_PROCD=1
 start_service() {
     /etc/init.d/screen disable 2>/dev/null
     /etc/init.d/screen running 2>/dev/null && /etc/init.d/screen stop
-    /etc/init.d/gl_lcd disable 2>/dev/null
-    /etc/init.d/gl_lcd running 2>/dev/null && /etc/init.d/gl_lcd stop
+    /etc/init.d/gl_screen disable 2>/dev/null
+    /etc/init.d/gl_screen running 2>/dev/null && /etc/init.d/gl_screen stop
 
     procd_open_instance
     procd_set_param nice -20

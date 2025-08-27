@@ -4,9 +4,30 @@ This package is dedicated to running LVGL demo on GL.iNet GL-BE3600 (Slate 7)
 
 ## Compile
 
-please refer to:
+Ubuntu 22.04:
 
-https://github.com/gl-inet/glbuilder?tab=readme-ov-file#add-your-own-ipk
+```
+$ git clone https://github.com/Telecominfraproject/wlan-ap.git
+$ cd wlan-ap
+$ ./setup.py --setup
+$ cd openwrt
+$ ./scripts/gen_config.py gl_b3000
+$ ./scripts/feeds install libdrm
+$ cd package
+$ git clone https://github.com/gl-inet/gl-lvgl.git
+$ cd ../
+$ make menuconfig
+
+  -> Extra packages
+    <*> gl-lvgl.................................................... lcd functions
+    Esc
+    Yes
+
+$ make toolchain/compile -j10
+$ make package/feeds/packages/libdrm/compile V=s
+$ make package/gl-lvgl/compile V=s
+```
+gl-lvgl ipk is in bin/packages/aarch64_cortex-a53_neon-vfpv4/base/gl-lvgl_2025-2-7-c924e24c-1_aarch64_cortex-a53_neon-vfpv4.ipk
 
 ## Install
 

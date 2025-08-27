@@ -1,6 +1,6 @@
 --- a/lvgl/src/drivers/display/fb/lv_linux_fbdev.c
 +++ b/lvgl/src/drivers/display/fb/lv_linux_fbdev.c
-@@ -356,4 +356,20 @@ static uint32_t tick_get_cb(void)
+@@ -356,4 +356,40 @@ static uint32_t tick_get_cb(void)
      return time_ms;
  }
  
@@ -8,27 +8,49 @@
 +{
 +    lv_linux_fb_t * dsc = lv_display_get_driver_data(disp);
 +
-+    if (dsc->fbfd)
++    if (dsc->fbfd) {
++        ioctl(dsc->fbfd, FBIOBLANK, FB_BLANK_VSYNC_SUSPEND);
 +        ioctl(dsc->fbfd, FBIOBLANK, FB_BLANK_UNBLANK);
++    }
 +}
 +
 +void lv_linux_fbdev_set_blank(lv_display_t * disp)
 +{
 +    lv_linux_fb_t * dsc = lv_display_get_driver_data(disp);
 +
-+    if (dsc->fbfd)
++    if (dsc->fbfd) {
++        ioctl(dsc->fbfd, FBIOBLANK, FB_BLANK_HSYNC_SUSPEND);
 +        ioctl(dsc->fbfd, FBIOBLANK, FB_BLANK_NORMAL);
++    }
++}
++
++void lv_linux_fbdev_set_undisplay(lv_display_t * disp)
++{
++    lv_linux_fb_t * dsc = lv_display_get_driver_data(disp);
++
++    if (dsc->fbfd)
++        ioctl(dsc->fbfd, FBIOBLANK, FB_BLANK_HSYNC_SUSPEND);
++}
++
++void lv_linux_fbdev_set_display(lv_display_t * disp)
++{
++    lv_linux_fb_t * dsc = lv_display_get_driver_data(disp);
++
++    if (dsc->fbfd)
++        ioctl(dsc->fbfd, FBIOBLANK, FB_BLANK_VSYNC_SUSPEND);
 +}
 +
  #endif /*LV_USE_LINUX_FBDEV*/
 --- a/lvgl/src/drivers/display/fb/lv_linux_fbdev.h
 +++ b/lvgl/src/drivers/display/fb/lv_linux_fbdev.h
-@@ -39,6 +39,9 @@ void lv_linux_fbdev_set_file(lv_display_
+@@ -39,6 +39,11 @@ void lv_linux_fbdev_set_file(lv_display_
   */
  void lv_linux_fbdev_set_force_refresh(lv_display_t * disp, bool enabled);
  
 +void lv_linux_fbdev_set_unblank(lv_display_t * disp);
 +void lv_linux_fbdev_set_blank(lv_display_t * disp);
++void lv_linux_fbdev_set_undisplay(lv_display_t * disp);
++void lv_linux_fbdev_set_display(lv_display_t * disp);
 +
  /**********************
   *      MACROS
